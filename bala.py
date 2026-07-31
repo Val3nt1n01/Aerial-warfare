@@ -6,7 +6,7 @@ class bala:
         self.y = y
         self.ancho = 20
         self.alto = 20
-        self.velocidad = 20
+        self.velocidad = 15
         self.color = "white"
         self.rect = pygame.Rect(self.x, self.y, self.ancho, self.alto)
 

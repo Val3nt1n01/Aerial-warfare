@@ -9,7 +9,7 @@ class cubo:
         self.velocidad = 8
         self.color = "red"
         self.rect = pygame.Rect(self.x, self.y, self.ancho, self.alto)
-        self.imagen = pygame.image.load("cubo.jpg")  # Carga la imagen del cubo
+        self.imagen = pygame.image.load("cubo_sin_fondo.png")  # Carga la imagen del cubo
         self.imagen = pygame.transform.scale(self.imagen, (self.ancho, self.alto))
 
     def dibujar(self, ventana):

@@ -14,6 +14,7 @@ VENTANA = pygame.display.set_mode((ANCHO, ALTO))
 FPS = 60
 FUENTE = pygame.font.SysFont("AmeriGarmnd_BT", 36)
 
+
 jugando = True
 
 relog = pygame.time.Clock()
@@ -31,7 +32,7 @@ enemigos = []
 balas = []
 
 ultima_bala = 0
-tiempo_entre_balas = 100  # Tiempo en milisegundos entre disparos
+tiempo_entre_balas = 250  # Tiempo en milisegundos entre disparos
 
 enemigos.append(Enemigo(ANCHO/2, 100))
 
@@ -53,6 +54,10 @@ def gestionar_teclas(teclas):
         cubo.x += cubo.velocidad
     if teclas[pygame.K_SPACE]:
         crear_bala()
+    if cubo.x < 0:
+        cubo.x = 0
+    if cubo.x > ANCHO - cubo.ancho:
+        cubo.x = ANCHO - cubo.ancho
 
 while jugando:
 
