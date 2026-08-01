@@ -14,6 +14,14 @@ pygame.display.set_caption("Aerial Warfare")
 FPS = 60
 relog = pygame.time.Clock()
 
+# --- FONDO DEL MENÚ ---
+# Reemplaza "fondo_menu.png" por la ruta/nombre de tu imagen
+fondo_menu_original = pygame.image.load("fondo_menu.jpg")
+fondo_menu = pygame.transform.scale(fondo_menu_original, (ANCHO, ALTO))
+
+fondo_game_original = pygame.image.load("fondo_game.jpg")
+fondo_game = pygame.transform.scale(fondo_game_original, (ANCHO, ALTO))
+
 # --- FUENTES Y TIPOGRAFÍAS ---
 FUENTE_HUD = pygame.font.SysFont("AmeriGarmnd_BT", 36)
 FUENTE_TITULO = pygame.font.SysFont("AmeriGarmnd_BT", 72, bold=True)
@@ -28,7 +36,7 @@ boton_menu = pygame.Rect(ANCHO // 2 - 120, ALTO // 2 + 40, 240, 60)
 
 # --- VARIABLES DE ESTADO Y JUEGO ---
 jugando = True
-estado = "MENU"  # Opciones: "MENU", "JUEGO", "PAUSA", "GAME_OVER"
+estado = "MENU"
 nombre_jugador = ""
 
 vida = 5
@@ -86,14 +94,12 @@ def guardar_puntaje(nombre_final, puntos_finales):
     except FileNotFoundError:
         pass
 
-    # Solo actualiza si el jugador existe y su puntaje actual es mayor
     if nombre_clean in puntajes_guardados:
         if puntos_finales > puntajes_guardados[nombre_clean]:
             puntajes_guardados[nombre_clean] = puntos_finales
     else:
         puntajes_guardados[nombre_clean] = puntos_finales
 
-    # Guarda la lista actualizada de récords
     with open("puntajes.txt", "w") as archivo:
         for usuario, pts in puntajes_guardados.items():
             archivo.write(f"{usuario}: {pts}\n")
@@ -108,14 +114,12 @@ while jugando:
         if evento.type == pygame.QUIT:
             jugando = False
 
-        # ESCAPE para Pausa
         if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
             if estado == "JUEGO":
                 estado = "PAUSA"
             elif estado == "PAUSA":
                 estado = "JUEGO"
 
-        # Captura de Texto en Pantalla de Game Over
         if estado == "GAME_OVER" and evento.type == pygame.KEYDOWN:
             if evento.key == pygame.K_RETURN:
                 guardar_puntaje(nombre_jugador, puntos)
@@ -126,7 +130,6 @@ while jugando:
                 if len(nombre_jugador) < 12 and evento.unicode.isprintable():
                     nombre_jugador += evento.unicode
 
-        # Clics del Mouse
         if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
             if estado == "MENU":
                 if boton_play.collidepoint(evento.pos):
@@ -145,7 +148,8 @@ while jugando:
     # 1. PANTALLA: MENÚ PRINCIPAL
     # ==========================================
     if estado == "MENU":
-        VENTANA.fill("black")
+        # Dibujar la imagen de fondo en la esquina superior izquierda (0,0)
+        VENTANA.blit(fondo_menu, (0, 0))
 
         txt_titulo = FUENTE_TITULO.render("AERIAL WARFARE", True, "white")
         VENTANA.blit(txt_titulo, txt_titulo.get_rect(center=(ANCHO // 2, ALTO // 4)))
@@ -175,7 +179,9 @@ while jugando:
         teclas = pygame.key.get_pressed()
         gestionar_teclas(teclas)
 
-        VENTANA.fill("black")
+        # Fondo estático durante el juego
+        VENTANA.blit(fondo_game, (0, 0))
+
         cubo.dibujar(VENTANA)
 
         for b in balas[:]:
@@ -237,7 +243,7 @@ while jugando:
         VENTANA.blit(txt_menu, txt_menu.get_rect(center=boton_menu.center))
 
     # ==========================================
-    # 4. PANTALLA: GAME OVER (CAPTURA NOMBRE)
+    # 4. PANTALLA: GAME OVER
     # ==========================================
     elif estado == "GAME_OVER":
         VENTANA.fill("black")
